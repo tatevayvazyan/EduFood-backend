@@ -29,8 +29,8 @@ public class FoodRestApi {
         return foodService.getAllFoods();
     }
 
-    @GetMapping("/all/{category}")
-    List<Food> allInCategory(@PathVariable String  category) {
+    @GetMapping("/category")
+    List<Food> allInCategory(@RequestParam String  category) {
         return foodService.getFoodByCategory(category);
     }
 
@@ -47,15 +47,15 @@ public class FoodRestApi {
         return foodService.getFoodById(id);
     }
 
-    @GetMapping("/name/{name}")
-    Food oneByName(@PathVariable
+    @GetMapping("/name")
+    Food oneByName(@RequestParam
         String name) {
 
         return foodService.getFoodByName(name);
     }
 
     @DeleteMapping("/{id}")
-    void deleteUser(@PathVariable Long id) {
+    void deleteFood(@PathVariable Long id) {
         foodService.deleteFoodById(id);
     }
 
@@ -65,6 +65,7 @@ public class FoodRestApi {
         Food newFood) {
        return foodService.updateFood(newFood);
     }
+
     @PostMapping("/{id}/{name}")
     Food uploadAsset(@RequestParam("file")
         MultipartFile file, @PathVariable Long id, @PathVariable String name) throws IOException, NotFoundException {

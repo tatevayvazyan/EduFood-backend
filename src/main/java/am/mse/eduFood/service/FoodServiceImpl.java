@@ -86,7 +86,7 @@ public class FoodServiceImpl implements FoodService {
         Asset asset = new Asset();
         asset.setName(name);
         asset.setUri(uri);
-        assetService.save(asset);
+//        assetService.save(asset);
 
         List<Asset> assets = food.getAssets();
         if (assets == null) {

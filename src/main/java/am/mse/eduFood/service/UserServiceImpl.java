@@ -3,6 +3,7 @@ package am.mse.eduFood.service;
 import am.mse.eduFood.domain.User;
 import am.mse.eduFood.dto.UserDto;
 import am.mse.eduFood.repository.UserRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,9 +15,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
@@ -38,20 +39,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
 
-        return userRepository.findAll().stream()
-            .map(u -> new UserDto(u.getFirstName(), u.getLastName(), u.getUsername(), u.getRole())).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(this::getUserDto).collect(Collectors.toList());
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public UserDto getUserById(Long id) throws NotFoundException {
 
-        User user = userRepository.findById(id).orElse(null);
-
-        //TODO come back to throw exception
-        if (user == null) {
-            return null;
-        }
-        return new UserDto(user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole());
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        return getUserDto(user);
 
     }
 
@@ -59,19 +54,20 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByUsername(String username) {
 
         User user = userRepository.findByUsername(username);
-        return new UserDto(user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole());
+        return getUserDto(user);
     }
 
 
     @Override
     public void deleteUserById(Long id) {
 
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            userRepository.delete(user);
-        }
+        userRepository.findById(id).ifPresent(userRepository::delete);
 
     }
 
+    @Override
+    public UserDto getUserDto(User user) {
 
+        return new UserDto(user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole());
+    }
 }

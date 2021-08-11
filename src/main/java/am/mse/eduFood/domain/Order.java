@@ -1,8 +1,17 @@
 package am.mse.eduFood.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "edu_order")
 public class Order {
@@ -18,12 +27,8 @@ public class Order {
     @OneToOne
     private User user;
 
-    @OneToMany
-    @JoinTable(
-        name="OrderFoods",
-        joinColumns = @JoinColumn( name="order_id"),
-        inverseJoinColumns = @JoinColumn( name="food_id")
-    )
-    private List<Food> foods;
+    @OneToMany(cascade = {CascadeType.ALL},  targetEntity = OrderItem.class)
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private List<OrderItem> orderItems;
 
 }

@@ -32,7 +32,7 @@ public class Food {
     @Column(name="category")
     private String category;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(
         name="FoodAssets",
         joinColumns = @JoinColumn( name="food_id"),

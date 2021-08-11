@@ -1,16 +1,14 @@
 package am.mse.eduFood.service;
 
 
-import am.mse.eduFood.domain.Asset;
-import am.mse.eduFood.domain.Food;
-import am.mse.eduFood.domain.Order;
+import am.mse.eduFood.dto.OrderDto;
+import am.mse.eduFood.dto.OrderItemDto;
+import javassist.NotFoundException;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface OrderService {
 
-    Order createOrder(List<Long> foodIds, Long userId);
-    void delete(Long id);
+    OrderDto createOrder(Long userId, List<OrderItemDto> items) throws NotFoundException;
 
 }

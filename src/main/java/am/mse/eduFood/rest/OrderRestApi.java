@@ -1,69 +1,26 @@
 package am.mse.eduFood.rest;
 
-import am.mse.eduFood.domain.Food;
-import am.mse.eduFood.service.FoodService;
+import am.mse.eduFood.dto.OrderDto;
+import am.mse.eduFood.dto.OrderItemsDtoList;
+import am.mse.eduFood.service.OrderService;
 import javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 @RestController
-@RequestMapping(value = "/food")
+@RequestMapping(value = "/order")
 public class OrderRestApi {
 
-    private final FoodService foodService;
+    private final OrderService orderService;
 
-    public OrderRestApi(FoodService foodService) {
+    public OrderRestApi(OrderService orderService) {
 
-        this.foodService = foodService;
+        this.orderService = orderService;
     }
 
-    @GetMapping("/all")
-    List<Food> all() {
-        return foodService.getAllFoods();
-    }
+    @PostMapping("/create/{id}")
+    OrderDto uploadAsset(@RequestBody
+        OrderItemsDtoList items, @PathVariable Long id) throws  NotFoundException {
 
-    @GetMapping("/all/{category}")
-    List<Food> allInCategory(@PathVariable String  category) {
-        return foodService.getFoodByCategory(category);
-    }
-
-    @PostMapping("/")
-    void newFood(@RequestBody
-        Food newFood) {
-         foodService.addFood(newFood);
-    }
-
-    @GetMapping("/{id}")
-    Food one(@PathVariable
-        Long id) {
-
-        return foodService.getFoodById(id);
-    }
-
-    @GetMapping("/name/{name}")
-    Food oneByName(@PathVariable
-        String name) {
-
-        return foodService.getFoodByName(name);
-    }
-
-    @DeleteMapping("/{id}")
-    void deleteUser(@PathVariable Long id) {
-        foodService.deleteFoodById(id);
-    }
-
-
-    @PutMapping("/")
-    Food update(@RequestBody
-        Food newFood) {
-       return foodService.updateFood(newFood);
-    }
-    @PostMapping("/{id}/{name}")
-    Food uploadAsset(@RequestParam("file")
-        MultipartFile file, @PathVariable Long id, @PathVariable String name) throws IOException, NotFoundException {
-       return foodService.addAsset(id, file, name);
+       return orderService.createOrder(id, items.getItems());
     }
 }

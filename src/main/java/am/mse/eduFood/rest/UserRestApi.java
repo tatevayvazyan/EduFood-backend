@@ -3,6 +3,7 @@ package am.mse.eduFood.rest;
 import am.mse.eduFood.domain.User;
 import am.mse.eduFood.dto.UserDto;
 import am.mse.eduFood.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class UserRestApi {
 
     @GetMapping("/{id}")
     UserDto one(@PathVariable
-        Long id) {
+        Long id) throws NotFoundException {
 
         return userService.getUserById(id);
     }
