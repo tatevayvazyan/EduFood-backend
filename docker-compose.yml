@@ -2,7 +2,7 @@ version: '2'
 
 services:
   app:
-    image: 'edu-food:latest'
+    image: 'shushiki/edufood:latest'
     container_name: app
     ports:
     - '8080:8080'
