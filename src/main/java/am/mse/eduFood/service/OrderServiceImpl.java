@@ -12,8 +12,12 @@ import am.mse.eduFood.repository.UserRepository;
 import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -45,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         Order order = new Order();
         order.setUser(user);
+        order.setCreatedDate(LocalDateTime.now());
         //        orderRepository.save(order);
 
         double totalPrice = 0.0;
@@ -52,8 +57,8 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderItemDto itemDto : items) {
             Food food = foodService.getFoodById(itemDto.getItem());
-            if(food == null){
-                throw new NotFoundException("Food not found: "+itemDto.getItem());
+            if (food == null) {
+                throw new NotFoundException("Food not found: " + itemDto.getItem());
             }
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
@@ -70,6 +75,25 @@ public class OrderServiceImpl implements OrderService {
 
 
 
-        return new OrderDto(order.getId(), order.getTotalPrice(), userService.getUserDto(order.getUser()), items);
+        return new OrderDto(order.getId(), order.getCreatedDate(), order.getTotalPrice(), userService.getUserDto(order.getUser()),
+            items);
     }
+
+    @Override
+    public List<OrderDto> getAllForToday() {
+
+        List<Order> orders = orderRepository.findByCreatedDateBetween(LocalDate.now().atTime(0, 0), LocalDate.now().atTime(23, 59));
+        return orders.stream().map(this::getOrderDto).collect(Collectors.toList());
+    }
+
+    public OrderDto getOrderDto(Order order) {
+
+        List<OrderItemDto> orderItemDtos =
+            order.getOrderItems().stream().map(oi -> new OrderItemDto(oi.getId(), oi.getQuantity())).collect(Collectors.toList());
+
+        return new OrderDto(order.getId(), order.getCreatedDate(), order.getTotalPrice(), userService.getUserDto(order.getUser()),
+            orderItemDtos);
+    }
+
+
 }

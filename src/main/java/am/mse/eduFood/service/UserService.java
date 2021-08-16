@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    void addUser(User user);
+    UserDto addUser(User user);
     List<UserDto> getAllUsers();
     UserDto getUserById(Long id) throws NotFoundException;
     UserDto getUserByUsername(String username);

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,6 +22,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="order_id")
     private Long id;
+
+    @Column(name="created_date")
+    private LocalDateTime createdDate;
 
     @Column(name="total_price")
     private double totalPrice;

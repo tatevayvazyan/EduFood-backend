@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/user")
 public class UserRestApi {
@@ -27,11 +28,10 @@ public class UserRestApi {
         return userService.getAllUsers();
     }
 
-
-    @PostMapping("/")
-    void newUser(@RequestBody
+    @PostMapping("/create")
+    UserDto newUser(@RequestBody
         User newUser) {
-         userService.addUser(newUser);
+         return userService.addUser(newUser);
     }
 
     @GetMapping("/{id}")

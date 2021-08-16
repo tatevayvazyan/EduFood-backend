@@ -30,10 +30,11 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void addUser(User user) {
+    public UserDto addUser(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        return getUserDto(user);
     }
 
     @Override
@@ -68,6 +69,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserDto(User user) {
 
-        return new UserDto(user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole());
+        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole());
     }
 }

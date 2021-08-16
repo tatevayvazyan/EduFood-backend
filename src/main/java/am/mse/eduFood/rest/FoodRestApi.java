@@ -1,18 +1,15 @@
 package am.mse.eduFood.rest;
 
 import am.mse.eduFood.domain.Food;
-import am.mse.eduFood.domain.User;
-import am.mse.eduFood.dto.UserDto;
 import am.mse.eduFood.service.FoodService;
-import am.mse.eduFood.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/food")
 public class FoodRestApi {
@@ -34,7 +31,7 @@ public class FoodRestApi {
         return foodService.getFoodByCategory(category);
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     void newFood(@RequestBody
         Food newFood) {
          foodService.addFood(newFood);
@@ -66,7 +63,7 @@ public class FoodRestApi {
        return foodService.updateFood(newFood);
     }
 
-    @PostMapping("/{id}/{name}")
+    @PostMapping("/asset/{id}/{name}")
     Food uploadAsset(@RequestParam("file")
         MultipartFile file, @PathVariable Long id, @PathVariable String name) throws IOException, NotFoundException {
        return foodService.addAsset(id, file, name);

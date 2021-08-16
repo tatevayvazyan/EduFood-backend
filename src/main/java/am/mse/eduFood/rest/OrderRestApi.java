@@ -6,6 +6,9 @@ import am.mse.eduFood.service.OrderService;
 import javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/order")
 public class OrderRestApi {
@@ -22,5 +25,10 @@ public class OrderRestApi {
         OrderItemsDtoList items, @PathVariable Long id) throws  NotFoundException {
 
        return orderService.createOrder(id, items.getItems());
+    }
+
+    @GetMapping("/daily")
+    List<OrderDto> allForToday(){
+        return orderService.getAllForToday();
     }
 }

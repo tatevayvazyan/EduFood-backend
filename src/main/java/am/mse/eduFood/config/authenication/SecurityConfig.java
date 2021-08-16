@@ -4,6 +4,7 @@ package am.mse.eduFood.config.authenication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -52,10 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // We don't need CSRF for this example
-        httpSecurity.csrf().disable()
+        httpSecurity.cors().and().csrf().disable()
             // dont authenticate this particular request
-            .authorizeRequests().antMatchers("/eduFood_war/authenticate","/authenticate").permitAll()
-            .antMatchers("/food/**","/user/**").access("hasRole('ADMIN')")
+            .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .antMatchers("/eduFood_war/authenticate","/authenticate", "/eduFood_war/user/create", "/user/create").permitAll()
+            .antMatchers("/food/create","/food/asset/**", "/user/all").access("hasRole('ADMIN')")
             // all other requests need to be authenticated
                 .anyRequest().authenticated()
             .and()
