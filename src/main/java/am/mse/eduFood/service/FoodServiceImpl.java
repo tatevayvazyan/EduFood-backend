@@ -32,9 +32,9 @@ public class FoodServiceImpl implements FoodService {
 
 
     @Override
-    public void addFood(Food food) {
+    public Food addFood(Food food) {
 
-        foodRepository.save(food);
+       return foodRepository.save(food);
     }
 
     @Override

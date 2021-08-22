@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto getOrderDto(Order order) {
 
         List<OrderItemDto> orderItemDtos =
-            order.getOrderItems().stream().map(oi -> new OrderItemDto(oi.getId(), oi.getQuantity())).collect(Collectors.toList());
+            order.getOrderItems().stream().map(oi -> new OrderItemDto(oi.getFood().getId(), oi.getQuantity(), oi.getFood().getName())).collect(Collectors.toList());
 
         return new OrderDto(order.getId(), order.getCreatedDate(), order.getTotalPrice(), userService.getUserDto(order.getUser()),
             orderItemDtos);

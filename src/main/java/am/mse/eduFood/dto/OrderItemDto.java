@@ -15,4 +15,5 @@ public class OrderItemDto implements Serializable {
 
     private Long item;
     private Long quantity;
+    private String name;
 }

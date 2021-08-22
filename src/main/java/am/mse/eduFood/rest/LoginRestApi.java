@@ -4,7 +4,8 @@ import am.mse.eduFood.config.authenication.JwtRequest;
 import am.mse.eduFood.config.authenication.JwtResponse;
 import am.mse.eduFood.config.authenication.JwtTokenUtil;
 import am.mse.eduFood.config.authenication.JwtUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import am.mse.eduFood.domain.User;
+import am.mse.eduFood.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,14 +18,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class LoginRestApi {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
+    private final JwtUserDetailsService userDetailsService;
+
+    private final UserRepository userRepository;
+
+    public LoginRestApi(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil,
+        JwtUserDetailsService userDetailsService, UserRepository userRepository) {
+
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody
@@ -34,10 +43,11 @@ public class LoginRestApi {
 
         final UserDetails userDetails = userDetailsService
             .loadUserByUsername(authenticationRequest.getUsername());
+        User user = userRepository.findByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, user.getRole().eRole()) );
     }
 
     private void authenticate(String username, String password) throws Exception {

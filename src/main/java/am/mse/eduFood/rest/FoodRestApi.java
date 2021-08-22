@@ -23,49 +23,68 @@ public class FoodRestApi {
 
     @GetMapping("/all")
     List<Food> all() {
+
         return foodService.getAllFoods();
     }
 
     @GetMapping("/category")
-    List<Food> allInCategory(@RequestParam String  category) {
+    List<Food> allInCategory(
+        @RequestParam
+            String category) {
+
         return foodService.getFoodByCategory(category);
     }
 
     @PostMapping("/create")
-    void newFood(@RequestBody
-        Food newFood) {
-         foodService.addFood(newFood);
+    Food newFood(
+        @RequestBody
+            Food newFood) {
+
+        return foodService.addFood(newFood);
     }
 
     @GetMapping("/{id}")
-    Food one(@PathVariable
-        Long id) {
+    Food one(
+        @PathVariable
+            Long id) {
 
         return foodService.getFoodById(id);
     }
 
     @GetMapping("/name")
-    Food oneByName(@RequestParam
-        String name) {
+    Food oneByName(
+        @RequestParam
+            String name) {
 
         return foodService.getFoodByName(name);
     }
 
     @DeleteMapping("/{id}")
-    void deleteFood(@PathVariable Long id) {
+    void deleteFood(
+        @PathVariable
+            Long id) {
+
         foodService.deleteFoodById(id);
     }
 
 
     @PutMapping("/")
-    Food update(@RequestBody
-        Food newFood) {
-       return foodService.updateFood(newFood);
+    Food update(
+        @RequestBody
+            Food newFood) {
+
+        return foodService.updateFood(newFood);
     }
 
     @PostMapping("/asset/{id}/{name}")
-    Food uploadAsset(@RequestParam("file")
-        MultipartFile file, @PathVariable Long id, @PathVariable String name) throws IOException, NotFoundException {
-       return foodService.addAsset(id, file, name);
+    Food uploadAsset(
+        @RequestParam("file")
+            MultipartFile file,
+        @PathVariable
+            Long id,
+        @PathVariable
+            String name) throws IOException, NotFoundException {
+
+        return foodService.addAsset(id, file, name);
     }
 }
