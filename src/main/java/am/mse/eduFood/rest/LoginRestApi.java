@@ -14,7 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://edufood.mskh.am")
 @RestController
 public class LoginRestApi {
 
@@ -47,7 +47,7 @@ public class LoginRestApi {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token, user.getRole().eRole()) );
+        return ResponseEntity.ok(new JwtResponse(token, user.getRole().eRole(), user.getId()) );
     }
 
     private void authenticate(String username, String password) throws Exception {
