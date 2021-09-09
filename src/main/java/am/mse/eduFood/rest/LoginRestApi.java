@@ -14,7 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://edufood.mskh.am")
+@CrossOrigin(origins = "https://edufood.mskh.am")
 @RestController
 public class LoginRestApi {
 

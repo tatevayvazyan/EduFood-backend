@@ -1,5 +1,6 @@
 package am.mse.eduFood.rest;
 
+import am.mse.eduFood.domain.ERole;
 import am.mse.eduFood.domain.User;
 import am.mse.eduFood.dto.UserDto;
 import am.mse.eduFood.service.UserService;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://edufood.mskh.am")
+@CrossOrigin(origins = "https://edufood.mskh.am")
 @RestController
 @RequestMapping(value = "/user")
 public class UserRestApi {
@@ -31,7 +32,14 @@ public class UserRestApi {
     @PostMapping("/create")
     UserDto newUser(@RequestBody
         User newUser) {
+         newUser.setRole(ERole.CUSTOMER);
          return userService.addUser(newUser);
+    }
+    @PostMapping("/create/admin")
+    UserDto newAdminUser(@RequestBody
+        User newUser) {
+        newUser.setRole(ERole.ADMIN);
+        return userService.addUser(newUser);
     }
 
     @GetMapping("/{id}")

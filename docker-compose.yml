@@ -5,7 +5,7 @@ services:
     image: 'shushiki/edufood:latest'
     container_name: app
     ports:
-    - '8080:8080'
+    - '8090:8090'
     depends_on:
       - db
     environment:

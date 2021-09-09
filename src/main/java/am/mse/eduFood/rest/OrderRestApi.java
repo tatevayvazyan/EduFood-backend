@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://edufood.mskh.am")
+@CrossOrigin(origins = "https://edufood.mskh.am")
 @RestController
 @RequestMapping(value = "/order")
 public class OrderRestApi {
