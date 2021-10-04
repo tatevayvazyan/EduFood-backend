@@ -1,6 +1,7 @@
 package am.mse.eduFood.repository;
 
 import am.mse.eduFood.domain.Order;
+import am.mse.eduFood.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByCreatedDateBetween(LocalDateTime from, LocalDateTime to);
+    List<Order> findByCreatedDateBetweenAndUser(LocalDateTime from, LocalDateTime to, User user);
 
 }
 

@@ -33,6 +33,18 @@ public class User {
     @Column(name="password")
     private String password;
 
+    @Column(name="email", unique = true)
+    private String email;
+
+    @Column(name="phone_number")
+    private String phoneNumber;
+
+    @Column(name="class_number")
+    private String classNumber;
+
+    @Column(name="is_valid")
+    private boolean isValid;
+
     @Enumerated(EnumType.STRING)
     private ERole role;
 

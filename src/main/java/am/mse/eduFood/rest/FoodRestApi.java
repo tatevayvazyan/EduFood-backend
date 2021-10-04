@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "https://edufood.mskh.am")
+@CrossOrigin(origins = {"https://edufood.mskh.am", "http://localhost:4200"})
 @RestController
 @RequestMapping(value = "/food")
 public class FoodRestApi {

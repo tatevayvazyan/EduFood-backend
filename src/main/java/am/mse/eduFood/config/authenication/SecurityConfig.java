@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // dont authenticate this particular request
             .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .antMatchers("/eduFood_war/authenticate","/authenticate", "/eduFood_war/user/create", "/user/create").permitAll()
-            .antMatchers("/food/create","/food/asset/**", "/user/all", "/user/create/admin").access("hasRole('ADMIN')")
+            .antMatchers("/food/create","/food/asset/**", "/user/all", "/user/create/admin", "user/validate/*").access("hasRole('ADMIN')")
             // all other requests need to be authenticated
                 .anyRequest().authenticated()
             .and()

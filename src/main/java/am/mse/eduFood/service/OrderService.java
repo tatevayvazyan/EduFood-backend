@@ -10,5 +10,8 @@ import java.util.List;
 public interface OrderService {
 
     OrderDto createOrder(Long userId, List<OrderItemDto> items) throws NotFoundException;
+    void deleteOrder(Long orderId);
     List<OrderDto> getAllForToday();
+
+    List<OrderDto> getAllForUser(Long userId) throws NotFoundException;
 }

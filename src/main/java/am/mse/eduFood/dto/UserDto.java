@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
@@ -26,4 +27,11 @@ public class UserDto {
     @Enumerated(EnumType.STRING)
     private ERole role;
 
+    private String email;
+
+    private String phoneNumber;
+
+    private String classNumber;
+
+    private boolean isValid;
 }

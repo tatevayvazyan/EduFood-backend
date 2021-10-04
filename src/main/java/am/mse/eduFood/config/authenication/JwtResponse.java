@@ -11,12 +11,14 @@ public class JwtResponse implements Serializable {
     private final String role;
 
     private final Long id;
+    private final boolean valid;
 
-    public JwtResponse(String jwttoken, String role, Long id) {
+    public JwtResponse(String jwttoken, String role, Long id, boolean valid) {
 
         this.jwttoken = jwttoken;
         this.role = role;
         this.id = id;
+        this.valid = valid;
     }
 
     public String getToken() {
@@ -32,6 +34,10 @@ public class JwtResponse implements Serializable {
     public Long getId() {
 
         return this.id;
+    }
+    public boolean getValid() {
+
+        return this.valid;
     }
 
 }

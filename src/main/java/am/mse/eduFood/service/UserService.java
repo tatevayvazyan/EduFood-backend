@@ -16,4 +16,6 @@ public interface UserService {
     UserDto getUserByUsername(String username);
     void deleteUserById(Long id);
     UserDto getUserDto(User user);
+
+    UserDto validate(Long id) throws NotFoundException;
 }

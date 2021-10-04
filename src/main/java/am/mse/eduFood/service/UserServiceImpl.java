@@ -69,6 +69,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserDto(User user) {
 
-        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole());
+        if (user == null) {
+            return null;
+        }
+        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getRole(),
+            user.getEmail(), user.getPhoneNumber(), user.getClassNumber(), user.isValid());
+    }
+
+    @Override
+    public UserDto validate(Long id) throws NotFoundException {
+
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        user.setValid(true);
+        userRepository.save(user);
+
+        return getUserDto(user);
     }
 }

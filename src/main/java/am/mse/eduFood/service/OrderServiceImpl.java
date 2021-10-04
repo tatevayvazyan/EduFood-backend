@@ -47,6 +47,10 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto createOrder(Long userId, List<OrderItemDto> items) throws NotFoundException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        //TODO error mapper
+        if(!user.isValid() ){
+            throw new NotFoundException("User is not Valid");
+        }
         Order order = new Order();
         order.setUser(user);
         order.setCreatedDate(LocalDateTime.now());
@@ -78,11 +82,50 @@ public class OrderServiceImpl implements OrderService {
         return new OrderDto(order.getId(), order.getCreatedDate(), order.getTotalPrice(), userService.getUserDto(order.getUser()),
             items);
     }
+    @Override
+    public void deleteOrder(Long orderId)  {
+
+        Order order = orderRepository.getById(orderId);
+
+        orderRepository.delete(order);
+
+    }
 
     @Override
     public List<OrderDto> getAllForToday() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime from;
+        LocalDateTime to;
 
-        List<Order> orders = orderRepository.findByCreatedDateBetween(LocalDate.now().atTime(0, 0), LocalDate.now().atTime(23, 59));
+        if(now.getHour() < 13){
+            from = LocalDate.now().minusDays(1).atTime(13, 33);
+            to = LocalDate.now().atTime(5, 33);
+        }else {
+            from = LocalDate.now().atTime(13, 33);
+            to = LocalDateTime.now();
+        }
+
+        List<Order> orders = orderRepository.findByCreatedDateBetween(from, to);
+        return orders.stream().map(this::getOrderDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDto> getAllForUser(Long userId) throws NotFoundException {
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime from;
+        LocalDateTime to;
+
+        if(now.getHour() < 13){
+            from = LocalDate.now().minusDays(1).atTime(13, 33);
+            to = LocalDate.now().atTime(5, 33);
+        }else {
+            from = LocalDate.now().atTime(13, 33);
+            to = LocalDateTime.now();
+        }
+        User user = userRepository.findById(userId).orElseThrow(() ->new NotFoundException("user not found"));
+
+        List<Order> orders = orderRepository.findByCreatedDateBetweenAndUser(from, to, user);
         return orders.stream().map(this::getOrderDto).collect(Collectors.toList());
     }
 
