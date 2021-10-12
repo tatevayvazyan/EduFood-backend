@@ -2,19 +2,18 @@ package am.mse.eduFood.service;
 
 import am.mse.eduFood.domain.Asset;
 import am.mse.eduFood.domain.Food;
+import am.mse.eduFood.dto.AssetDto;
 import am.mse.eduFood.repository.FoodRepository;
 import javassist.NotFoundException;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,7 +33,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public Food addFood(Food food) {
 
-       return foodRepository.save(food);
+        return foodRepository.save(food);
     }
 
     @Override
@@ -62,50 +61,57 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public Food updateFood(Food food) {
+    public Food updateFood(Food food) throws NotFoundException {
 
-        return null;
+        Food updateFood = foodRepository.findById(food.getId()).orElseThrow(() -> new NotFoundException("Food not found"));
+        if (food.getPrice() != 0.0) {
+            updateFood.setPrice(food.getPrice());
+        }
+        if (!StringUtils.isBlank(food.getCategory())) {
+            updateFood.setCategory(food.getCategory());
+        }
+        if (!StringUtils.isBlank(food.getDescription())) {
+            updateFood.setDescription(food.getDescription());
+        }
+        if (!StringUtils.isBlank(food.getName())) {
+            updateFood.setName(food.getName());
+        }
+
+        return foodRepository.save(updateFood);
     }
 
     @Override
     public void deleteFoodById(Long id) {
 
-        Food food = foodRepository.findById(id).orElse(null);
-        if (food != null) {
-            foodRepository.delete(food);
-        }
+        foodRepository.findById(id).ifPresent(foodRepository::delete);
     }
 
     @Override
-    public Food addAsset(Long foodId, MultipartFile image, String name) throws IOException, NotFoundException {
+    public AssetDto addAsset(Long foodId, MultipartFile image, String name) throws IOException, NotFoundException {
 
         Food food = foodRepository.findById(foodId).orElseThrow(() -> new NotFoundException("Food not found"));
-
-        String uri = assetService.uploadAsset(convert(image), name);
+        System.out.println("food found for uploading image" + food.getName());
 
         Asset asset = new Asset();
         asset.setName(name);
-        asset.setUri(uri);
-//        assetService.save(asset);
+        asset.setUri("/food/get/asset/"+image.getOriginalFilename());
+        asset.setFood(food);
+        asset.setPhoto(image.getBytes());
+        assetService.save(asset);
 
-        List<Asset> assets = food.getAssets();
-        if (assets == null) {
-            assets = new ArrayList<>();
-        }
-        assets.add(asset);
-        food.setAssets(assets);
-
-
-        return foodRepository.save(food);
+        return new AssetDto(asset.getId(),asset.getUri(),asset.getName());
     }
 
-    public static File convert(MultipartFile file) throws IOException {
 
-        File convFile = new File(file.getOriginalFilename());
-        convFile.createNewFile();
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convFile;
+
+    private static byte[] readBytesFromFile(String filePath) throws IOException {
+        File inputFile = new File(filePath);
+        FileInputStream inputStream = new FileInputStream(inputFile);
+
+        byte[] fileBytes = new byte[(int) inputFile.length()];
+        inputStream.read(fileBytes);
+        inputStream.close();
+
+        return fileBytes;
     }
 }

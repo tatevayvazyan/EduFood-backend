@@ -32,12 +32,7 @@ public class Food {
     @Column(name="category")
     private String category;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JoinTable(
-        name="FoodAssets",
-        joinColumns = @JoinColumn( name="food_id"),
-        inverseJoinColumns = @JoinColumn( name="asset_id")
-    )
+    @OneToMany(mappedBy = "food")
     private List<Asset> assets;
 
 }

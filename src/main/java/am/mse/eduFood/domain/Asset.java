@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -24,5 +25,13 @@ public class Asset {
 
     @Column(name="name", unique = true)
     private String name;
+
+    @Lob
+    @Column(name = "photo", columnDefinition="BLOB")
+    private byte[] photo;
+
+    @ManyToOne
+    @JoinColumn(name="food_id", nullable=false)
+    private Food food;
 
 }

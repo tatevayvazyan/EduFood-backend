@@ -2,37 +2,69 @@ package am.mse.eduFood.service;
 
 import am.mse.eduFood.domain.Asset;
 import am.mse.eduFood.repository.AssetRepository;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
+import javassist.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Map;
+import java.io.*;
 
 @Service
-public class AssetServiceImpl implements AssetService{
+public class AssetServiceImpl implements AssetService {
 
-    private final Cloudinary cloudinary;
     private final AssetRepository assetRepository;
 
-    public AssetServiceImpl(Cloudinary cloudinary, AssetRepository assetRepository) {
+    public AssetServiceImpl(AssetRepository assetRepository) {
 
-        this.cloudinary = cloudinary;
         this.assetRepository = assetRepository;
     }
 
-    @Override
-    public String uploadAsset(Object image, String name) throws IOException {
+    public static File convert(MultipartFile file) throws IOException {
 
-        Map uploadResults = cloudinary.uploader().upload(image, ObjectUtils.asMap("public_id", name));
+        File convFile = new File(file.getOriginalFilename());
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convFile;
+    }
 
-        return (String) uploadResults.get("secure_url");
+    // save uploaded file to new location
+    private void writeToFile(InputStream uploadedInputStream, String filepath) {
+
+        try {
+            int read;
+            byte[] bytes = new byte[1024];
+
+            OutputStream out = new FileOutputStream(filepath);
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
+
+
     @Override
-    public Asset save(Asset asset) throws IOException {
+    public Asset save(Asset asset) {
 
         return assetRepository.save(asset);
     }
+
+    @Override
+    public byte[] getImage(String uri) throws NotFoundException {
+
+        Asset asset = assetRepository.findByUri("/food/get/asset/"+uri);
+        if (asset != null) {
+            return asset.getPhoto();
+
+        }
+       throw new NotFoundException("Image not found!");
+    }
+
+
 }

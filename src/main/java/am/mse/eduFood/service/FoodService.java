@@ -2,6 +2,7 @@ package am.mse.eduFood.service;
 
 
 import am.mse.eduFood.domain.Food;
+import am.mse.eduFood.dto.AssetDto;
 import javassist.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,7 @@ public interface FoodService {
     Food getFoodByName(String name);
     List<Food> getFoodByCategory(String category);
     Food getFoodById(Long id);
-    Food updateFood(Food food);
+    Food updateFood(Food food) throws NotFoundException;
     void deleteFoodById(Long id);
-    Food addAsset(Long foodId, MultipartFile image, String name) throws IOException, NotFoundException;
+    AssetDto addAsset(Long foodId, MultipartFile image, String name) throws IOException, NotFoundException;
 }

@@ -9,16 +9,22 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/edufood
+      - SPRING_DATASOURCE_USERNAME=edufood
       - SPRING_DATASOURCE_PASSWORD=Shrjancik238
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
   db:
-    image: 'postgres:13.1-alpine'
-    container_name: db
-    environment:
-#      - POSTGRES_URL=
-      - POSTGRESQL_DATABASE=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=Shrjancik238
+   image: mysql:5.7
+   container_name: db
+   volumes:
+     - postgres-data:/var/lib/mysql
+   ports:
+     - '33060:3306'
+   environment:
+     MYSQL_ROOT_PASSWORD: Shrjancik238
+     MYSQL_DATABASE: edufood
+     MYSQL_USER: edufood
+     MYSQL_PASSWORD: Shrjancik238
+volumes:
+  postgres-data:
